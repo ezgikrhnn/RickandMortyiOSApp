@@ -7,13 +7,19 @@
 
 import UIKit
 
+protocol RMCharacterListViewDelegate: AnyObject{
+    func rmCharacterListView(_ characterListView: RMCharacterListView,
+                             didSelectCharacter character: RMCharacter)
+}
 ///final eklendiğinde bu sınıfın başka hiçbir sınıftan miras alınamaz.
 ///final ile bu sınıf değiştirilemez gibi düşünebilirim
 // View that handles showing list of characters, loader, etc.
 final class RMCharacterListView: UIView {
 
+    public weak var delegate: RMCharacterListViewDelegate? ///protocolden nesne
+    
     ///object from viewmodel
-    private let viewModel = CharacterListViewViewModel()
+    private let viewModel = RMCharacterListViewViewModel()
     
     //SPINNER: dönen loading işaret
     private let spinner: UIActivityIndicatorView = {
@@ -32,7 +38,11 @@ final class RMCharacterListView: UIView {
         collectionView.isHidden = true ///default olarak saklı olsun.
         collectionView.alpha = 0 ///opaklık = opacity ayarı
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(RMCharacterCollectionViewCell.self, forCellWithReuseIdentifier:RMCharacterCollectionViewCell.cellIdentifier )
+        
+        //foofterCollectionView Register ediyorum:
+        collectionView.register(RMFooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier)
+        
         return collectionView ///return unutma!
     }() ///closure belirttiği için () kullanılır.
     
@@ -44,6 +54,7 @@ final class RMCharacterListView: UIView {
         addSubviews(collectionView, spinner) /// resources/extension dosyası içindeki
         addConstraints()
         spinner.startAnimating()
+        viewModel.delegate = self
         viewModel.fetchCharacters()
         setUpCollectionView()
     }
@@ -69,13 +80,33 @@ final class RMCharacterListView: UIView {
     private func setUpCollectionView(){
         collectionView.dataSource = viewModel ///viewmodel ViewModel'dan extend edilen nesne. ViewModel içinde extension ve fonksiyonlarını yazdım.
         collectionView.delegate = viewModel
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
-            self.spinner.stopAnimating()
-            self.collectionView.isHidden = false
-            UIView.animate(withDuration: 0.4){
-                self.collectionView.alpha = 1
-            }
-        })
     }
 }
+
+extension RMCharacterListView : RMCharacterListViewViewModelDelegate {
+  //protokol içindeki fonksiyonlar
+    func didSelectCharacter(_ character: RMCharacter) {
+        delegate?.rmCharacterListView(self, didSelectCharacter: character)
+    }
+    
+    func didLoadInitialCharacters() {
+        collectionView.reloadData()
+        spinner.stopAnimating() ///spinner ayarını burada kullanarak cok daha hızlı işlem yaptım.
+        collectionView.isHidden = false
+        collectionView.reloadData() //Initial fetch
+        UIView.animate(withDuration: 0.4){
+            self.collectionView.alpha = 1
+        }
+    }
+    
+    ///bu fonksiyon siteye yeni veriler eklendiğinde bu yeni verileri içeren colectionviewe hücreler eklemek için kullanılır.
+    ///bu fonk. genellikle sayfalama (pagination) işlemlerinde kullanıcı daha fazla veri istediğinde çağırılır.
+    ///performBatchUpdates yöntemi ile birlikte, UICollectionView'ın yeni hücreleri sorunsuz bir şekilde ve animasyonlu bir şekilde eklemesinş sağlar.
+    func didLoadMoreCharacter(with newIndexPaths: [IndexPath]) {
+        collectionView.performBatchUpdates{
+            self.collectionView.insertItems(at: newIndexPaths)
+        }
+    }
+}
+
+
