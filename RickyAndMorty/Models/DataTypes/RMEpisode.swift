@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RMEpisode: Codable{
+struct RMEpisode: Codable, RMEpisodeDataRender{ ///RMEpisodeDataRender collectionViewcellviewmodel içinde tanımladıgım bir protokol.
     let id: Int
     let name: String
     let air_date: String

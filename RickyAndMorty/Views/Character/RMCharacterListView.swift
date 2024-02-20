@@ -3,25 +3,36 @@
 //  RickyAndMorty
 //
 //  Created by Ezgi Karahan on 7.02.2024.
-//
+/*
+ SINIF AÇIKLAMASI:
+ 
+ - DELEGASYON PATERNİ: RMCharacterListViewDelegate protokolü delegasyon paterni ile karakter seçimindeki yönergeleri uygular.
+ - delegate propertysi
+ - viewModel nesnesi
+ - spinner nesnesi         : (ve closure içinde bazı özellikleri)
+ - collectionView nesnesi  : (ve closure içinde bası özellikleri) -> bu aşamada viewcell sınıfı ve bu sınıfın viewCellViewMode sınıfı da oluşturuldu. CV'ye  alt kısımda ekstra bilgi için footer da yapıldı, bu aşamada footerView sınıfı oluşturuldu. BUrası daha fazla veri yüklerken kullanılacak.
+ - overrideInit fonksiyonu: gerekli nesneler ve gerekli fonksiyonlar burada çağırıldı.
+ 
+ 
+ 
+ */
 
 import UIKit
+
 
 protocol RMCharacterListViewDelegate: AnyObject{
     func rmCharacterListView(_ characterListView: RMCharacterListView,
                              didSelectCharacter character: RMCharacter)
 }
-///final eklendiğinde bu sınıfın başka hiçbir sınıftan miras alınamaz.
-///final ile bu sınıf değiştirilemez gibi düşünebilirim
-// View that handles showing list of characters, loader, etc.
+
 final class RMCharacterListView: UIView {
 
-    public weak var delegate: RMCharacterListViewDelegate? ///protocolden nesne
+    public weak var delegate: RMCharacterListViewDelegate? ///protocolden bir property oluşturdum
     
-    ///object from viewmodel
+    //View model nesnesi
     private let viewModel = RMCharacterListViewViewModel()
     
-    //SPINNER: dönen loading işaret
+    //SPINNER:
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
@@ -35,16 +46,18 @@ final class RMCharacterListView: UIView {
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10) /// collectionview hücre aralıkları
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.isHidden = true ///default olarak saklı olsun.
-        collectionView.alpha = 0 ///opaklık = opacity ayarı
+        collectionView.isHidden = true
+        collectionView.alpha = 0 //opacity
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        //cell
         collectionView.register(RMCharacterCollectionViewCell.self, forCellWithReuseIdentifier:RMCharacterCollectionViewCell.cellIdentifier )
         
-        //foofterCollectionView Register ediyorum:
+        ///footer
         collectionView.register(RMFooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier)
         
         return collectionView ///return unutma!
-    }() ///closure belirttiği için () kullanılır.
+    }()
     
     
     // MARK: - Init
