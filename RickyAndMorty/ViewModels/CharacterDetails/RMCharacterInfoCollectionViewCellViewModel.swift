@@ -107,8 +107,6 @@ final class RMCharacterInfoCollectionViewCellViewModel{
         
         
         var displayTitle: String {
-            
-            
             switch self{
             case .status,
                     .gender,
