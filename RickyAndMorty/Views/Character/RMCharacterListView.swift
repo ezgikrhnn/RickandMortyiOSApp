@@ -114,10 +114,12 @@ final class RMCharacterListView: UIView {
 //EXTENSION:
 extension RMCharacterListView : RMCharacterListViewViewModelDelegate {
   //protokol içindeki fonksiyonlar
+    //karaktere tıklandıgında
     func didSelectCharacter(_ character: RMCharacter) {
         delegate?.rmCharacterListView(self, didSelectCharacter: character)
     }
     
+    //karakter başlatıcı
     func didLoadInitialCharacters() {
         collectionView.reloadData()
         spinner.stopAnimating() ///spinner ayarını burada kullanarak cok daha hızlı işlem yaptım.
