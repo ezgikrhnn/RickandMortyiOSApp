@@ -10,14 +10,26 @@
  - delegate propertysi
  - viewModel nesnesi
  - spinner nesnesi         : (ve closure içinde bazı özellikleri)
+ 
  - collectionView nesnesi  : (ve closure içinde bası özellikleri) -> bu aşamada viewcell sınıfı ve bu sınıfın viewCellViewMode sınıfı da oluşturuldu. CV'ye  alt kısımda ekstra bilgi için footer da yapıldı, bu aşamada footerView sınıfı oluşturuldu. BUrası daha fazla veri yüklerken kullanılacak.
- - overrideInit fonksiyonu: gerekli nesneler ve gerekli fonksiyonlar burada çağırıldı.
  
+ - overrideInit fonksiyonu : gerekli nesneler ve gerekli fonksiyonlar burada çağırıldı.
  
+ - requiredInit fonksiyonu : bir sınıf içinde required başlatıcı varsa bu sınıftan üretilen her alt sınıf bu başlatıcıyı kullanmalıdır. bu fonk genelde UIView yapılarında kullanılır.
+ 
+ - Constraints fonksiyonu  :
+ 
+ - SetUpCollectionView Fonk: datasource ve delegateini elf değil viewModel'e atadım.
+ 
+ - Extension               : protocol extend edildi ve burada 3 farklı fonksiyon yapıldı.
+    * didSelectCharacter        -> kullanıcı bir charactere tıkladıgında çalışır.
+    * didLoadInitialCharacters  -> character listesinin ilk defa yüklenmesi işlemi tamamlandığında çağrılır.
+    * didLoadMoreCharacter      -> sayfalama (pagination) işlemi sırasında daha fazla character yüklendiğinde  çalışır.
  
  */
 
 import UIKit
+
 
 
 protocol RMCharacterListViewDelegate: AnyObject{
@@ -71,11 +83,13 @@ final class RMCharacterListView: UIView {
         viewModel.fetchCharacters()
         setUpCollectionView()
     }
-        
+    
+    //REQUIRED INIT:
     required init?(coder: NSCoder){
         fatalError("Unsupported")
     }
     
+    //CONSTRAINST:
     private func addConstraints(){
         NSLayoutConstraint.activate([
             spinner.widthAnchor.constraint(equalToConstant: 100),
@@ -90,12 +104,14 @@ final class RMCharacterListView: UIView {
         ])
     }
     
+    //SETUP COLLECTIONVIEW:
     private func setUpCollectionView(){
         collectionView.dataSource = viewModel ///viewmodel ViewModel'dan extend edilen nesne. ViewModel içinde extension ve fonksiyonlarını yazdım.
         collectionView.delegate = viewModel
     }
 }
 
+//EXTENSION:
 extension RMCharacterListView : RMCharacterListViewViewModelDelegate {
   //protokol içindeki fonksiyonlar
     func didSelectCharacter(_ character: RMCharacter) {
@@ -112,9 +128,7 @@ extension RMCharacterListView : RMCharacterListViewViewModelDelegate {
         }
     }
     
-    ///bu fonksiyon siteye yeni veriler eklendiğinde bu yeni verileri içeren colectionviewe hücreler eklemek için kullanılır.
-    ///bu fonk. genellikle sayfalama (pagination) işlemlerinde kullanıcı daha fazla veri istediğinde çağırılır.
-    ///performBatchUpdates yöntemi ile birlikte, UICollectionView'ın yeni hücreleri sorunsuz bir şekilde ve animasyonlu bir şekilde eklemesinş sağlar.
+    ///performBatchUpdates -> yeni hücreler sorunsuz ve animasyonlu şekilde yüklenir.
     func didLoadMoreCharacter(with newIndexPaths: [IndexPath]) {
         collectionView.performBatchUpdates{
             self.collectionView.insertItems(at: newIndexPaths)
