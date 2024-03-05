@@ -5,15 +5,18 @@
 //  Created by Ezgi Karahan on 18.02.2024.
 //
 
-import Foundation
+import UIKit
 
 protocol RMEpisodeDataRender {
     var episode: String {get}
     var air_date: String {get}
     var name: String {get}
 }
-final class RMCharacterEpisodeCollectionViewCellViewModel{
+final class RMCharacterEpisodeCollectionViewCellViewModel: Hashable, Equatable{
+    
+    
     private let episodeDataUrl: URL?
+    public let borderColor : UIColor
     private var isFetching = false
     private var dataBlock: ((RMEpisodeDataRender)-> Void)?
     
@@ -29,8 +32,9 @@ final class RMCharacterEpisodeCollectionViewCellViewModel{
     }
     
     //MARK: - Init
-    init(episodeDataUrl: URL?){
+    init(episodeDataUrl: URL?, borderColor: UIColor = .systemBlue){
         self.episodeDataUrl = episodeDataUrl
+        self.borderColor = borderColor
     }
     
     public func registerForData(_ block: @escaping (RMEpisodeDataRender) -> Void) {
@@ -60,5 +64,15 @@ final class RMCharacterEpisodeCollectionViewCellViewModel{
                 print(String(describing: failure))
             }
         }
+    }
+    
+    //hash ve wquatable protokolleri fonksiyonları
+    //*Bir nesnenin hem hash(into:) fonksiyonunu hem de == operatörünü uygulaması, bu nesnenin hem benzersiz bir şekilde tanımlanabilmesini sağlar hem de iki nesnenin birbirine eşit olup olmadığının karşılaştırılabilmesini sağlar. Bu, koleksiyonlar gibi veri yapılarında nesnelerin yönetilmesi ve performansın iyileştirilmesi için önemlidir. */
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.episodeDataUrl?.absoluteString ?? "")
+    }
+    
+    static func == (lhs: RMCharacterEpisodeCollectionViewCellViewModel, rhs: RMCharacterEpisodeCollectionViewCellViewModel) -> Bool {
+        return lhs.hashValue == rhs.hashValue
     }
 }

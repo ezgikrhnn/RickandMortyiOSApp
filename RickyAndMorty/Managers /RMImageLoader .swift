@@ -37,7 +37,7 @@ final class RMImageLoader{
         
         //cache veri ekleme
         let request = URLRequest(url: url)
-        let task = URLSession.shared.dataTask(with: url){ [weak self] data, _, error in
+        let task = URLSession.shared.dataTask(with:  url){ [weak self] data, _, error in
             
             guard let data = data, error == nil else{
                 completion(.failure(error ?? URLError(.badServerResponse)))

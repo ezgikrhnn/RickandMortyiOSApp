@@ -14,7 +14,7 @@
 import Foundation
 
 /// represents uniques API endpoint
-@frozen enum RMEndPoint: String{
+@frozen enum RMEndPoint: String, CaseIterable, Hashable{
     
     /// endpoint to get character info
     case character

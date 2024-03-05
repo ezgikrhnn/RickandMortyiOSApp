@@ -37,7 +37,6 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         contentView.backgroundColor = .systemBackground
         contentView.layer.cornerRadius = 8
         contentView.layer.borderWidth = 2
-        contentView.layer.borderColor = UIColor.cyan.cgColor
         contentView.addSubviews(seasonLabel, nameLabel, airDateLabel)
         setUpConstraints()
     }
@@ -85,5 +84,6 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
             self?.seasonLabel.text = "Episode "+data.episode
         }
         viewModel.fetchEpisode()
+        contentView.layer.borderColor = viewModel.borderColor.cgColor
     }
 }

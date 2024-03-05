@@ -17,6 +17,7 @@ import Foundation
 
 final class RMService {
     static let shared = RMService()
+    private let cacheManager = RMAPICacheManager()
     
     /// Dışarıdan sınıfın örneklendirilmesini engellemek için private bir constructor tanımlanmıştır. Bu, shared üzerinden erişimi zorunlu kılar.
     private init(){
@@ -32,6 +33,18 @@ final class RMService {
     //*parametre = request (RMRequest sınıfından).*/
     public func execute<T: Codable>(_ request: RMRequest, expecting type: T.Type, completion: @escaping(Result<T, Error>) -> Void){
         
+        if let cachedData = cacheManager.cachedResponse(for: request.endpoint, url: request.url) {
+            
+            print("Using cache API response")
+            do{
+                let result = try JSONDecoder().decode(type.self, from: cachedData)
+            }catch{
+                completion(.failure(error))
+            }
+            return
+        }
+            
+            
         ///request nesnesini request() fonk. kullanarak url'e çevirmeye çalış:
         guard let urlRequest = self.request(from: request) else {
             completion(.failure(RMServiceError.failedToCreateRequest))
@@ -39,7 +52,7 @@ final class RMService {
         }
         
         ///data task (ağ isteği) oluşturma ve başlatma: istek urlRequest kullanılarak API'ye yapılır.
-        let task = URLSession.shared.dataTask(with: urlRequest){ data, _, error in ///response önemli değil -> _  kullandım.
+        let task = URLSession.shared.dataTask(with: urlRequest){ [weak self] data, _, error in ///response önemli değil -> _  kullandım.
             
             ///hata ve veri kontrolü
             guard let data = data, error == nil else {
@@ -50,6 +63,7 @@ final class RMService {
             // Decode Response
             do{
                 let result = try JSONDecoder().decode(type.self, from: data)
+                self?.cacheManager.setCache(for: request.endpoint, url: request.url, data: data)
                 completion(.success(result))
             }catch{
                 
