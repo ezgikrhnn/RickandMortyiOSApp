@@ -24,6 +24,7 @@ final class RMSearchViewController: UIViewController {
         
     }
 
+    //enum içeren controllerlarda başlatıcılar "Config" içeriyor.
     init(config: Config){
         self.config = config
         super.init(nibName: nil, bundle: nil) ///bir view controller'ın varsayılan initializer'ını çağırır ve UIKit'in bu view controller'ı  yönetebilmesi için kurulumu yapar. genelikle programmaticuı'da kullanılır.

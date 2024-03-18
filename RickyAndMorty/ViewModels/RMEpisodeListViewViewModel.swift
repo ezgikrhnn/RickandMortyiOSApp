@@ -19,8 +19,8 @@ protocol RMEpisodeListViewViewModelDelegate: AnyObject {
 final class RMEpisodeListViewViewModel: NSObject {
     
     public weak var delegate: RMEpisodeListViewViewModelDelegate?
-    
     private var isLoadingMoreEpisodes  = false
+    
     private let borderColors : [UIColor] = [
         .systemGreen,
         .systemBlue,
@@ -55,9 +55,6 @@ final class RMEpisodeListViewViewModel: NSObject {
     //FUNC FETCH CHARACTERS
     // fetch initial set of characters (20)
     public func fetchEpisodes(){
-        
-      
-       
         ///ağ isteği
         ///expecting-> yenit olarak apiden hangi tip beklendiğini (RMGetAllCharactersResponse) tipinde
         RMService.shared.execute(.listEpisodesRequest, expecting: RMGetAllEpisodesResponse.self){ [weak self] result in

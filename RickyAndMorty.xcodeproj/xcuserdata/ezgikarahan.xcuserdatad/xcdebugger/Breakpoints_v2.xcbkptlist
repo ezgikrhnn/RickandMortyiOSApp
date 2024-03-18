@@ -68,5 +68,69 @@
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7ECD70B7-30EA-4D73-A98C-B038C304F801"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RickyAndMorty/ViewModels/EpisodeDetail/RMEpisodeDetailViewViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "fetchEpisodeData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7ECD70B7-30EA-4D73-A98C-B038C304F801 - cc85ae0689b65720"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "RickyAndMorty.RMEpisodeDetailViewViewModel.fetchEpisodeData() -&gt; ()"
+                  moduleName = "RickyAndMorty"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ezgikarahan/Desktop/Kas%C4%B1m%20Adalan%20Bootcamp/RickyAndMorty/RickyAndMorty/ViewModels/EpisodeDetail/RMEpisodeDetailViewViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "67"
+                  endingLineNumber = "67"
+                  offsetFromSymbolStart = "592">
+               </Location>
+               <Location
+                  uuid = "7ECD70B7-30EA-4D73-A98C-B038C304F801 - ab5b257fb6885254"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;RickyAndMorty.RMEpisode, Swift.Error&gt;) -&gt; () in RickyAndMorty.RMEpisodeDetailViewViewModel.fetchEpisodeData() -&gt; ()"
+                  moduleName = "RickyAndMorty"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ezgikarahan/Desktop/Kas%C4%B1m%20Adalan%20Bootcamp/RickyAndMorty/RickyAndMorty/ViewModels/EpisodeDetail/RMEpisodeDetailViewViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "67"
+                  endingLineNumber = "67"
+                  offsetFromSymbolStart = "268">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A699AF8C-9D47-488A-8DBD-5459770260F5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RickyAndMorty/ViewModels/EpisodeDetail/RMEpisodeDetailViewViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "SectionType"
+            landmarkType = "13">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

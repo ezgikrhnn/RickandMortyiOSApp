@@ -71,7 +71,9 @@ final class RMCharacterListViewViewModel: NSObject {
         ///ağ isteği
         ///expecting-> yenit olarak apiden hangi tip beklendiğini (RMGetAllCharactersResponse) tipinde
         RMService.shared.execute(.listCharactersRequest, expecting: RMGetAllCharactersResponse.self){ [weak self] result in
+            print("character fetchi")
             switch result{
+               
             case .success(let responseModel):
                 let results = responseModel.results ///RMGetAllCharactersResponse türünde olduğu için results ve info isimli özellikleri var.
                 let info = responseModel.info
