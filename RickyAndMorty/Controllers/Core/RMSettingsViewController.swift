@@ -10,19 +10,23 @@
  
  RMSettingsView -> SwiftUI ile yazılmıştır -> rootView'dir.
  
- addSwiftUIController() Fonksiyonu -->  Bu metod, settingsSwiftUIController'ı mevcut view controller'a bir child olarak ekler ve onun view'ini mevcut view controller'ın view hiyerarşisine yerleştirir. 
+ addSwiftUIController() Fonksiyonu -->  Bu metod, settingsSwiftUIController'ı mevcut view controller'a bir child olarak ekler ve onun view'ini mevcut view controller'ın view hiyerarşisine yerleştirir.
+ 
+ 
+ StoreKit Kütüphanesi: uygulama içi staın alma işlemlerini yönetmek için kullanılır. (abonelikler, uygulama değerlendirmeleri, ödeme işlemlerini sorgulama..) bizim çalışmamızdaki amaç rate app eklemek oldu.
  */
+
+import StoreKit
+import SafariServices
 import SwiftUI
 import UIKit
 
 final class RMSettingsViewController: UIViewController {
 
-
-    //settings ekranı için gerekli tüm hücre viewModellarını içeren bir array oluşturdum:
-    //bu dizi viewModel'ın cellViewModels parametresi olarak kullanılır.
-    
+    ///controllerin settingsSwiftUIController isimli özelliği, UIHostingController'a referans tutar.
+    ///UIHostingControllerın jenerik parametresi RMSettingsView'dir. bu UIHostingCntrollerin içinde RMSettingsView tipinde vir swiftUI görünümü barındıracağı anlamına gelir.
+    ///
     private var settingsSwiftUIController: UIHostingController <RMSettingsView>?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +36,8 @@ final class RMSettingsViewController: UIViewController {
     }
     
     private func addSwiftUIController(){
+        
+        //buradaki çağırmalar olduça önemli dikkat et!!!
         let settingsSwiftUIController = UIHostingController(rootView: RMSettingsView(viewModel: RMSettingsViewViewModel(cellViewModels: RMSettingsOption.allCases.compactMap({
             
             return RMSettingsCellViewModel(type: $0) { [weak self] option in
@@ -39,6 +45,7 @@ final class RMSettingsViewController: UIViewController {
             }
             })
         )))
+        
         
         addChild(settingsSwiftUIController)
         settingsSwiftUIController.didMove(toParent: self)
@@ -56,27 +63,24 @@ final class RMSettingsViewController: UIViewController {
         self.settingsSwiftUIController = settingsSwiftUIController
     }
 
+    // HANDLE TAP FONK:
+    //ayar seçeneğina tıklandıgında ne olacağını tanımlar
     private func handleTap(option: RMSettingsOption){
+        
+        ///Bu fonksiyonun yalnızca ana iş parçacığı üzerinde çalıştığından emin oluyorum.
         guard Thread.current.isMainThread else {
             return
         }
         
-        switch option {
-        case .rateApp:
-            //show promt
-            break
-        case .contactUs:
-            <#code#>
-        case .terms:
-            <#code#>
-        case .privacy:
-            <#code#>
-        case .apiReference:
-            <#code#>
-        case .viewSeries:
-            <#code#>
-        case .viewCode:
-            <#code#>
+        if let url = option.targetUrl {
+            //openwebsite
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
+        }else if option == .rateApp{
+            //show rating prompt
+            if let windowScene = view.window?.windowScene{
+                SKStoreReviewController.requestReview(in: windowScene)
+            }
         }
     }
 
