@@ -5,12 +5,20 @@
 //  Created by Ezgi Karahan on 3.02.2024.
 //
 
+/*
+ Viewmodel.delegate = self  --> bu işlem sayesinde viewmodeldeki işlemler tamamlandığında viewmodel bu durumu controllera bildirebilir. Yani, viewModel'in içinde delegate?.didFetchInitialLocations() gibi bir çağrı yapıldığında, aslında RMLocationViewController'ın didFetchInitialLocations() metodu tetiklenir.
+ 
+ view'e viewModel'ı configuration ile bağlamıştım.
+ controllera viewModel'i viewmodelin delegate'i ile bağlayacağım.
+ */
 import UIKit
 
-final class RMLocationViewController: UIViewController {
+final class RMLocationViewController: UIViewController, RMLocationViewViewModelDelegate { // ViewModel protokolü eklendi
 
+    //VIEW nesnesi:
     private let primaryView = RMLocationView()
    
+    //VİEWMODEL nesnesi:
     private let viewModel = RMLocationViewViewModel()
     
     //MARK: -Lifecycle Functions
@@ -21,10 +29,12 @@ final class RMLocationViewController: UIViewController {
         title = "Location"
         addSearchButton()
         addConstraints()
+        viewModel.delegate = self
+        viewModel.fetchLocations()
     }
     
     private func addSearchButton(){
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapShare))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
     }
     
     private func addConstraints(){
@@ -37,11 +47,15 @@ final class RMLocationViewController: UIViewController {
         ])
     }
     
-    
     @objc
-    private func didTapShare(){
+    private func didTapSearch(){
         
     }
-
+    
+    //MARK: -Location ViewModel Delegate
+    ///final classs protokol de eklendiği için bu protokol fonksiyonu da bu sınıfta görünür hale geldi.
+    func didFetchInitialLocations(){
+        primaryView.configure(with: viewModel)
+    }
 
 }
