@@ -98,7 +98,6 @@ final class RMEpisodeDetailView: UIView {
     //MARK: Public
     public func configure(with viewModel: RMEpisodeDetailViewViewModel){
         self.viewModel = viewModel
-        print("configure functon called")
     }
 }
 
